@@ -9,11 +9,11 @@ import microservices from "../service/payment.services" as paymentService
  */
  
  // Operation specification for the PaymentService
-import technology from "../technology/payment.technology" as paymentTech
+import technology from "../technology/shared.technology" as paymentTech
 
 @technology(paymentTech)
 container PaymentContainer deployment technology paymentTech::_deployment.docker with operation 
-		environment "java:openjdk−8u91−jdk" deploys paymentService::v01.de.fhdo.PaymentService {
+		environment "java:openjdk−8u91−jdk" deploys paymentService::de.fhdo.PaymentService {
 	default values {
 		basic endpoints {
 			paymentTech::_protocols.mqtt, paymentTech::_protocols.rest : "http://www.charging.com/8080";

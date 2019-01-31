@@ -9,7 +9,6 @@ technology Shared {
 	protocols {
 		sync rest data formats json default with format json;
 		async mqtt data formats json default with format json;
-		async amqp data formats xml;
 	}
 
 	service aspects {
@@ -19,6 +18,12 @@ technology Shared {
 
 		aspect post for operations {
 			selector(protocol = rest);
+		}
+	}
+	
+	deployment technologies {
+		docker {
+			operation environments = "java:openjdk−8u91−jdk";
 		}
 	}
 
@@ -36,4 +41,6 @@ technology Shared {
 			operation environments = "oauth2" default;
 		}
 	}
+	
+	
 }

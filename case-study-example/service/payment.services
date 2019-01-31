@@ -12,33 +12,26 @@ import technology from "../technology/shared.technology" as shared
 
 import microservices from "charging.services" as chargingServices
 
-// Model for the PaymentService
+/*
+ * Model for the PaymentService
+ * The protocols, listed in Listing 2 of the book chapter, is defined in the shared.technology file
+ */ 
 @technology(go)
 @technology(shared)
 @endpoints(shared::_protocols.rest : "/payment";)
-functional microservice de.fhdo.PaymentService version v01 {
-	/*
-	 * The ChargingManagamentInterface is required for provisioning of information
-	 * regarding the used charging points.
-	 */
-	required interfaces {
-		chargingServices::v01.de.fhdo.ChargingService.ChargingManagamentInterface
-	}
-
+functional microservice de.fhdo.PaymentService {
 	// The Invoice interface offers functions for the payment
 	@endpoints(shared::_protocols.rest : "/invoice";)
 	public interface InvoiceInterface {
-		// Create an invoice
-		@endpoints(shared::_protocols.rest : "/create";)
-		@shared::_aspects.put
-		@shared::_aspects.post
-		createInvoice(sync in create : paymentData::v01.Payment.Invoice);
-
-		// Read an invoice
+		// Get an invoice
 		@endpoints(shared::_protocols.rest : "/read/{invoiceNumber}";)
-		readInvoice(sync in invoiceNumber : int,
+		getInvoice(sync in invoiceNumber : int,
 			sync out invoice : paymentData::v01.Payment.Invoice
 		);
+		
+		// Create an invoice
+		@endpoints(shared::_protocols.rest : "/create";)
+		createInvoice(sync in create : paymentData::v01.Payment.Invoice);
 
 		// Pay an invoice
 		@endpoints(shared::_protocols.rest : "/pay";)
