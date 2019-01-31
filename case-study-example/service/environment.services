@@ -1,0 +1,57 @@
+import datatypes from "../data/environment.data" as enviromentData
+import microservices from "infrastructure.services" as infrastructureServices
+/*
+ * Import of a technology model, which defines service-related technology. Please note that this is
+ * part of our current work in implementing technology models to separate the service functionality
+ * from the service technology concern and make technology definitions reusable across microservices
+ * and operation nodes. The imported model is assigned to Microservice instances with the
+ * "@technology" annotation.
+ */
+ import technology from "../technology/environment.technology" as environmentTech
+ 
+ // The EnvironmentService is respnsible for the display and aggregation of sensor data
+ @technology ( environmentTech )
+ @endpoints(environmentTech::_protocols.rest, environmentTech::_protocols.mqtt : "/environment";)
+ functional microservice de.fhdo.EnvironmentService version v01 {
+ 	
+ 	/* 
+ 	 * The infrastructural microservices are required for
+	 * the provisioning of cross-cutting concerns, e.g., scalability and reliability. 
+	*/  
+	required microservices {
+		infrastructureServices::v01.de.fhdo.APIGateways,
+		infrastructureServices::v01.de.fhdo.DiscoveryService,
+		infrastructureServices::v01.de.fhdo.SecurityService
+	}
+	
+	// The EnvironmentSensorInterface is responsible for receiving sensor data information
+ 	@endpoints ( environmentTech::_protocols.mqtt : "/sensor/";)
+ 	public interface EnvironmentSensorInterface{
+ 		
+ 		@endpoints ( environmentTech::_protocols.mqtt : "/receive";)
+ 		receiveSensorData ( async in sensorData : enviromentData::v01.EnvironmentData.SensorData );
+ 	}
+ 	
+ 	// The EnvironmentDataInterface interface is providing for displaying the Sensordata information
+ 	@endpoints ( environmentTech::_protocols.rest : "/data";)
+ 	public interface EnvironmentDataInterface {
+ 		
+ 		// Provides sensor data aggregated by sensors  
+ 		@endpoints ( environmentTech::_protocols.rest : "/sensordata/{sensorId}";)
+ 		readSensorData ( sync in sensorId : string,
+ 			sync out SensorData : enviromentData::v01.EnvironmentData.SensorData
+ 		);
+ 		
+ 		// Provides sensor data aggregated by quarters
+ 		@endpoints ( environmentTech::_protocols.rest : "/quarterdata/{quarterId}";)
+ 		readQuarterData ( sync in quarterId : string,
+ 			sync out quarterData : enviromentData::v01.EnvironmentData.Quarter
+ 		);
+ 		
+ 		// Provides sensor data aggregated by city's
+ 		@endpoints ( environmentTech::_protocols.rest : "/citydata/{cityId}";)
+ 		readCityData ( sync in cityId : string,
+ 			sync out cityData : enviromentData::v01.EnvironmentData.city
+ 		);	
+ 	}
+ }

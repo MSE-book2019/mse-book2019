@@ -1,0 +1,22 @@
+import microservices from "../service/payment.services" as paymentService
+
+/*
+ * Import of a technology model, which defines operation technology. Please note that this is part
+ * of our current work in implementing technology models to separate the service functionality from
+ * the service technology concern and make technology definitions reusable across microservices and
+ * operation nodes. The imported model is assigned to Container instances with the "@technology"
+ * annotation.
+ */
+ 
+ // Operation specification for the PaymentService
+import technology from "../technology/payment.technology" as paymentTech
+
+@technology(paymentTech)
+container PaymentContainer deployment technology paymentTech::_deployment.docker with operation 
+		environment "java:openjdk−8u91−jdk" deploys paymentService::v01.de.fhdo.PaymentService {
+	default values {
+		basic endpoints {
+			paymentTech::_protocols.mqtt, paymentTech::_protocols.rest : "http://www.charging.com/8080";
+		}
+	}
+}

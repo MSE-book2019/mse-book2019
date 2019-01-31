@@ -1,0 +1,57 @@
+import datatypes from "../data/payment.data" as paymentData
+
+/*
+ * Import of a technology model, which defines service-related technology. Please note that this is
+ * part of our current work in implementing technology models to separate the service functionality
+ * from the service technology concern and make technology definitions reusable across microservices
+ * and operation nodes. The imported model is assigned to Microservice instances with the
+ * "@technology" annotation.
+ */
+import technology from "../technology/go.technology" as go
+import technology from "../technology/shared.technology" as shared
+
+import microservices from "charging.services" as chargingServices
+
+// Model for the PaymentService
+@technology(go)
+@technology(shared)
+@endpoints(shared::_protocols.rest : "/payment";)
+functional microservice de.fhdo.PaymentService version v01 {
+	/*
+	 * The ChargingManagamentInterface is required for provisioning of information
+	 * regarding the used charging points.
+	 */
+	required interfaces {
+		chargingServices::v01.de.fhdo.ChargingService.ChargingManagamentInterface
+	}
+
+	// The Invoice interface offers functions for the payment
+	@endpoints(shared::_protocols.rest : "/invoice";)
+	public interface InvoiceInterface {
+		// Create an invoice
+		@endpoints(shared::_protocols.rest : "/create";)
+		@shared::_aspects.put
+		@shared::_aspects.post
+		createInvoice(sync in create : paymentData::v01.Payment.Invoice);
+
+		// Read an invoice
+		@endpoints(shared::_protocols.rest : "/read/{invoiceNumber}";)
+		readInvoice(sync in invoiceNumber : int,
+			sync out invoice : paymentData::v01.Payment.Invoice
+		);
+
+		// Pay an invoice
+		@endpoints(shared::_protocols.rest : "/pay";)
+		payInvoice(sync in invoiceNumber : int,
+			sync in paymentAmount : float,
+			sync out conformation : string
+		);
+
+		// Get a receipt for a paid invoice
+		@endpoints(shared::_protocols.rest : "/receipt/{invoiceNumber}";)
+		getReceipt (sync in invoiceNumber : int,
+			sync out receipt : paymentData::v01.Payment.Receipt
+		);
+	}
+}
+
