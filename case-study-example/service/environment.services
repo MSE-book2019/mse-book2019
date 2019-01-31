@@ -7,7 +7,7 @@ import microservices from "infrastructure.services" as infrastructureServices
  * and operation nodes. The imported model is assigned to Microservice instances with the
  * "@technology" annotation.
  */
- import technology from "../technology/environment.technology" as environmentTech
+ import technology from "../technology/shared.technology" as environmentTech
  
  // The EnvironmentService is respnsible for the display and aggregation of sensor data
  @technology ( environmentTech )
@@ -29,7 +29,7 @@ import microservices from "infrastructure.services" as infrastructureServices
  	public interface EnvironmentSensorInterface{
  		
  		@endpoints ( environmentTech::_protocols.mqtt : "/receive";)
- 		receiveSensorData ( async in sensorData : enviromentData::v01.EnvironmentData.SensorData );
+ 		receiveSensorData ( async in rawSensorData : enviromentData::v01.EnvironmentalSensors.RawSensorData );
  	}
  	
  	// The EnvironmentDataInterface interface is providing for displaying the Sensordata information
@@ -39,7 +39,7 @@ import microservices from "infrastructure.services" as infrastructureServices
  		// Provides sensor data aggregated by sensors  
  		@endpoints ( environmentTech::_protocols.rest : "/sensordata/{sensorId}";)
  		readSensorData ( sync in sensorId : string,
- 			sync out SensorData : enviromentData::v01.EnvironmentData.SensorData
+ 			sync out SensorData : enviromentData::v01.EnvironmentalSensors.RawSensorData
  		);
  		
  		// Provides sensor data aggregated by quarters

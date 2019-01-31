@@ -25,7 +25,12 @@ technology Shared {
 		docker {
 			operation environments = "java:openjdk−8u91−jdk";
 		}
+		
+		python {
+			operation environments = "python3";
+		}
 	}
+	
 
 	// Shared infrastructure technologies
 	infrastructure technologies {

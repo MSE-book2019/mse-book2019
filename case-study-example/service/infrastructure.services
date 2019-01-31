@@ -7,7 +7,7 @@ import datatypes from "../data/common.data" as commonData
  * and operation nodes. The imported model is assigned to Microservice instances with the
  * "@technology" annotation.
  */
-import technology from "../technology/infrastructure.technology" as infrastructureTech
+import technology from "../technology/shared.technology" as infrastructureTech
 
 // The API Gateway is responsible for the forwarding of requests to the designated microservice  
 @technology( infrastructureTech )
@@ -30,7 +30,7 @@ public infrastructure microservice de.fhdo.SecurityService version v01 {
 	@endpoints(infrastructureTech::_protocols.rest : "/token";)
 	interface TokenInterface {
 		@endpoints(infrastructureTech::_protocols.rest : "/AccessToken";)
-		getAccessToken (sync in credentials : commonData::a01.common.Credentials,
+		getAccessToken (sync in credentials : commonData::v01.Common.Credentials,
 			sync out accessToken :  string
 		);
 	}
@@ -38,7 +38,7 @@ public infrastructure microservice de.fhdo.SecurityService version v01 {
 	@endpoints(infrastructureTech::_protocols.rest : "/access";)
 	interface UserAuthorization {
 		@endpoints(infrastructureTech::_protocols.rest : "/authorize";)
-		authorizeUser (sync in credentials : commonData::a01.common.Credentials,
+		authorizeUser (sync in credentials : commonData::v01.Common.Credentials,
 			sync out authorizeInfo : boolean
 		);
 	}

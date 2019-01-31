@@ -7,12 +7,12 @@ import microservices from "../service/environment.services" as enironmentService
  * operation nodes. The imported model is assigned to Container instances with the "@technology"
  * annotation.
  */
-import technology from "../technology/environment.technology" as environmentTech
+import technology from "../technology/shared.technology" as environmentTech
 
 // Operation specification for the EnvironmentService
 @technology( environmentTech )
-container EnvironmentContainer deployment technology environmentTech::_deployment.docker with operation 
-			environment "python" deploys enironmentService::v01.de.fhdo.EnvironmentService  {
+container EnvironmentContainer deployment technology environmentTech::_deployment.python with operation 
+			environment "python3" deploys enironmentService::v01.de.fhdo.EnvironmentService  {
 	default values {
 		basic endpoints {
 			environmentTech::_protocols.rest, environmentTech::_protocols.mqtt : "http://www.charging.com/8080";

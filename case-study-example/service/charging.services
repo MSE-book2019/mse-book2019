@@ -9,7 +9,7 @@ import microservices from "infrastructure.services" as infrastructureServices
  * and operation nodes. The imported model is assigned to Microservice instances with the
  * "@technology" annotation.
  */
-import technology from "../technology/charging.technology" as chargingTech
+import technology from "../technology/shared.technology" as chargingTech
 
 // The ChargingStation microservice provides functions regarding the usage of the charging points
 @technology(chargingTech)
@@ -32,27 +32,27 @@ functional microservice de.fhdo.ChargingService version v01 {
 		
 		// Create a charging space
 		@endpoints(chargingTech::_protocols.rest : "/create";)
-		public createChargingSpace ( sync in chargingSpace: chargingData::v01.ChargingInfrastructure.ChargingSpace);
+		public createParkingSpace ( sync in parkingSpace: chargingData::v01.Charging.ParkingSpace);
 		
 		// Read a charging space
 		@endpoints(chargingTech::_protocols.rest : "/read/{id}";)
-		public readChargingSpace(sync in id: string,
-			sync out chargingSpace : chargingData::v01.ChargingInfrastructure.ChargingSpace
+		public readParkingSpace(sync in id: string,
+			sync out parkingSpace : chargingData::v01.Charging.ParkingSpace
 		);
 		
 		// Update a charging space
 		@endpoints(chargingTech::_protocols.rest : "/update/{id}";)
-		public updateChargingSpace (sync inout chargingSpaceIn : chargingData::v01.ChargingInfrastructure.ChargingSpace);
+		public updateParkingSpace (sync inout parkingSpaceIn : chargingData::v01.Charging.ParkingSpace);
 		
 		// Delete a charging space
 		@endpoints(chargingTech::_protocols.rest : "/delete/{id}";)
-		public deleteChargingSpace (sync in delete : int,
-			sync out chargingSpace : chargingData::v01.ChargingInfrastructure.ChargingSpace
+		public deleteParkingSpace (sync in delete : int,
+			sync out parkingSpace : chargingData::v01.Charging.ParkingSpace
 		);
 		
 		// Share a charging space
 		@endpoints(chargingTech::_protocols.rest : "/share/{id}";)
-		public shareChargingSpace (sync in id : int, 
+		public shareParkingSpace (sync in id : int, 
 			sync out response : boolean
 		);
 	}
@@ -63,20 +63,20 @@ functional microservice de.fhdo.ChargingService version v01 {
 		
 		// Find a charging space in a specific area
 		@endpoints(chargingTech::_protocols.rest : "/find/{address}";)
-		public findChargingSpace(sync in location : commonData::a01.common.Address,
-			sync out chargingSpace : chargingData::v01.ChargingInfrastructure.ChargingSpace
+		public findParkingSpace(sync in location : commonData::v01.Common.Address,
+			sync out parkingSpace : chargingData::v01.Charging.ParkingSpace
 		);
 		
 		// Query the actual status of a specific charging space
 		@endpoints(chargingTech::_protocols.rest : "/query/{chargingSpaceId}";)
-		public queryCharingSpace(sync in chargingSpaceId : string,
+		public queryParkingSpace(sync in chargingSpaceId : string,
 			sync out status : boolean 
 		);
 		
 		// Allocate a specific charging space
 		@endpoints(chargingTech::_protocols.rest : "/allocate/{chargingSpaceId}";)
-		public allocateChargingSpace(sync in chargingSpaceId : int,
-			sync out chargingSpace : chargingData::v01.ChargingInfrastructure.ChargingSpace
+		public allocateParkingSpace(sync in chargingSpaceId : int,
+			sync out chargingSpace : chargingData::v01.Charging.ParkingSpace
 		);
 	}
 	
